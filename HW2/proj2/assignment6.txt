@@ -1,0 +1,51 @@
+1. Worst Case Time Complexity = O(3n) + O(1) = O(3n + 1) = O(n) 
+void List<T>::reverse() 
+{
+  List x;
+  for(auto i = this->begin(); i != this->end(); ++i)
+  {
+    x.push_front(*i);
+  }
+  *this = x;
+}
+
+Atomics = 
+- O(1) for List x initialization
+- O(n) for the loop
+- O(n) for push_front in loop
+- O(n) for copying x to *this
+
+
+2. Worst Case Time Complexity = O(1) + O(4) + O(1) + O(n) + O(n) + O(n) + O(2) + O(1) = O(3n+9)  = O(n)
+bool MyMemory::release_mem(int ind, int len)
+{
+    bool indexExists = false;
+    if(ind > max_index || len > block_size || len < 0 || ind < 0) // if parameters are not within bounds return false
+        return false;
+    else // else if  index is found, free memory. if index doesn't exist yet, insert a MMB by the order of indexes
+    {
+        auto i = mlist.begin();
+        while(i->get_index() <= ind && i != mlist.end())
+        {
+            if(i->get_index() == ind)
+            {
+                i->free_mem(len);
+                indexExists = true;
+            }
+            ++i;
+        }
+        if(!indexExists)
+            mlist.insert(i, MyMemoryBlock(ind,len));
+        return true;
+    }
+}
+
+Atomics = 
+- O(1) for assigning boolean
+- O(4) for checking if statement
+- O(1) for assigning i
+- O(n) for while loop
+- O(n) for incrementing i
+- O(n) for checking if statement
+- O(2) for when the if statement is true
+- O(1) for return statement

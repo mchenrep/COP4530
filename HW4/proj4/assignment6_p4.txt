@@ -1,0 +1,87 @@
+1. Analyze the worst-case time complexity of the private member function makeEmpty(BinaryNode* & t) of the binary expression tree.
+
+void BET::makeEmpty(BinaryNode* &t)
+{
+    if(t) 
+    {
+        makeEmpty(t->left);
+        makeEmpty(t->right);
+        delete t;
+        t = nullptr;
+    }
+}
+
+Worst-case time complexity = O(n)
+- Work per node: deleting t and assigning nullptr O(1)
+- Traversal: O(n) for n nodes
+- So the makeEmpty function would be = O(n of left traversal) + O(n of right traversal) + O(n for work per node of every traversal) = O(n) when simplified
+
+
+
+2. Analyze the worst-case time complexity of the function you write to convert a postfix expression into infix expression 
+(if this is done in multiple functions, you need to combine their complexity together). Give the complexity in the form of Big-O.
+
+void BET::printInfixExpression(BinaryNode *n) 
+{
+    if(n != nullptr)
+    {
+        bool p = false; // boolean for needing parenthesis
+        if(isOperator(n->data) && n->left && isOperator(n->left->data))
+        {
+            if(precedence(n->data) > precedence(n->left->data))
+                p = true;
+        }
+        if(p)
+            cout<<"( ";
+        printInfixExpression(n->left);
+        if(p)
+            cout<<") ";
+        cout<<n->data<<" ";
+        
+        p = false;
+        if(isOperator(n->data) && n->right && isOperator(n->right->data))
+        {
+            if(precedence(n->data) >= precedence(n->right->data))
+                p = true;
+        }
+        if(p)
+            cout<<"( ";
+        printInfixExpression(n->right);
+        if(p)
+            cout<<") ";
+            
+    }
+}
+
+bool isOperator(const std::string& token) 
+{
+    return token == "+" || token == "-" || token == "*" || token == "/";
+}
+
+bool isOperand(const string token)
+{
+    for(auto i = 0; i < token.size(); i++)
+    {
+        if(!isalnum(token[i]))
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+int precedence(string op)
+{
+    if(op == "+" || op == "-")
+        return 0;
+    if(op == "*" || op == "/")
+        return 1;
+    return -1;
+}
+
+Time Complexity = O(n)
+- Complexity of isOperator: O(1) because it returns the comparison of token
+- Complexity of isOperand: O(n) simplified after looping for n size of token and comparison
+- Complexity of precedence: O(1) because it returns comparison of op
+- Complexity of printInfixExpression: O(2n for isOperator and isOperand throughout traversal) + O(n for all the cout statements and checking boolean throughout traversal)
+= O(n) when simplified

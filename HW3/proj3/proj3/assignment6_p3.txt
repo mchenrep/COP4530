@@ -1,0 +1,60 @@
+Matthew Chen
+MC23C
+
+1. worst-case time complexity of clear() in stack
+
+template <typename T>
+void Stack<T>::clear()
+{
+    container.clear(); 
+}
+
+Time Complexity = O(n), because it calls the stl vector container's clear function, which would clear n number of elements
+in the vector.
+
+2. worst-case time complexity of evaluate() in in2post
+
+string evaluate(string postfix)
+{
+    Stack<string> s;
+    stringstream ss(postfix);
+    string token;
+    while(ss>>token)
+    {
+            if(isOperand(token))
+            {
+                if(!isInt(token))
+                    return postfix;
+                s.push(token);
+            }
+            else
+            {
+                if(s.size() >= 2)
+                {
+                    int op,op2;
+                    if(isInt(s.top()))
+                    {
+                        op = stoi(s.top());
+                        s.pop();
+                        if(isInt(s.top()))
+                        {
+                            op2 = stoi(s.top());
+                            s.pop();
+                        }
+                        if(token == "+")
+                            s.push(to_string(op+op2));
+                        else if(token == "-")
+                            s.push(to_string(op2-op));
+                        else if(token == "*")
+                            s.push(to_string(op*op2));
+                        else if(token == "/")
+                            s.push(to_string(op2/op));
+                    }
+                }
+            }
+    }
+    return s.top();
+}
+
+Time complexity = O(n), because the while loop reading tokens is O(n) and processing the tokens is also O(n)
+in a worst-case time complexity and O(1) for the return statement leading to a O(2n + 1) unsimplified time complexity

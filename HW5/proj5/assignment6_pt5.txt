@@ -1,0 +1,59 @@
+1. Analyze the worst-case time complexity of the private member function rehash() of HashTable.
+
+template <typename K, typename V>
+void HashTable<K, V>::rehash()
+{
+  vector<pair<K,V>> temp;
+  for(const auto &b : lst)
+  {
+    for(const auto &kv: b)
+      temp.push_back(kv);
+  }
+  
+  size_t newSize = prime_below(2*si);
+  lst.clear();
+  si = 0;
+  lst.resize(newSize);
+  for(const auto &kv: temp)
+    insert(kv);
+}
+
+Worst Case Time Complexity = O(n^2);
+
+Outer loop = O(n);
+Nested loop = O(n);
+Atomic functions  = O(C);
+3rd for loop = O(n^2);
+
+
+
+2. Analyze the worst-case time complexity of the member function removeUser(const string & k) of PassServer. 
+Given your answer in the Big-O notation. 
+Explain your answer. Your explanation must be clearly understandable by others.
+
+bool PassServer::removeUser(const string & k)
+{
+    return table.remove(k);
+}
+
+template <typename K, typename V>
+bool HashTable<K, V>::remove(const K & k)
+{
+  auto &wl = lst[myhash(k)];
+
+  auto itr = wl.begin();
+  while (itr != wl.end()) {
+    if (itr->first == k) {
+      wl.erase(itr);
+      si--;
+      return true;
+    }
+  }
+
+  return false;
+}
+
+Worst Case Time Complexity = O(n);
+Explanation:
+The removeUser function calls on the HashTable's remove function which has an O(n) worst case complexity due to the
+while loop.
